@@ -5,6 +5,12 @@ extrato.pdf
 # remove txt files
 *.txt
 
+# remove csv files
+*.csv
+
+# remove json
+*.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
