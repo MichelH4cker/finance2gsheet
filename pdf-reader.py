@@ -13,24 +13,18 @@ f_destination += ".csv"
 text = ""
 parts = []
 
-# jump header
-def visitor_body(text, cm, tm, font_dict, font_size):
-    y = tm[5]
-    if y > 50:
-        parts.append(text)
 
 # simply read the pdf
 try:
     reader = PdfReader(f_origin)
     for page in reader.pages:
-        text += page.extract_text(visitor_text = visitor_body)
-        text_body = "".join(parts)
+        text += page.extract_text()
     print("[+] pdf read with success!")
 except Exception as exc:
     print(f"[-] Error: {exc}")
 
 # break the text into lines in a array
-lines = text_body.split('\n')
+lines = text.split('\n')
 
 # delete unnecessary data
 cleaner_lines = []
@@ -68,6 +62,13 @@ with open(f_destination, mode='w', newline='') as csv_file:
             time_start = line.find(time_matches)
             # take text after time
             service_type = line[time_start + len(time_matches):].strip()
+
+            # in the last line, the pdf reader capture 
+            # the firsts word in the next page
+            # this if delete theese words
+            if 'Extrato de Conta Corrente' in service_type:
+                service_type = re.sub(r'Extrato de Conta Corrente', '', service_type)
+
 
             row.append(service_type)
             csv_writer.writerow(row)
