@@ -11,7 +11,7 @@ git clone https://github.com/MichelH4cker/finance2gsheet
 After that, you will need to install all libraries used. Write the following code in your terminal
 
 ```bash
-pip install PyPDF2 gspread
+pip install PyPDF2 gspread oauth2client
 ```
 
 ## Usage 

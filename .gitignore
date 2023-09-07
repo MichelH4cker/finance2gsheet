@@ -8,6 +8,9 @@ extrato.pdf
 # remove csv files
 *.csv
 
+# remove json
+*.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
