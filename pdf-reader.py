@@ -73,7 +73,7 @@ with open(csv_filename, mode='w', newline='') as csv_file:
             continue
 
         money_matches = ''.join(re.findall(money_pattern, lines[line])).strip()
-        Dec
+
         transaction_type_matches = ''.join(re.findall(transaction_pattern, lines[line])).strip()
 
         # find the date position
