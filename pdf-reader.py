@@ -31,13 +31,9 @@ for line in lines:
         break
     cleaner_lines.append(line)
     #print(line)
-
 lines = cleaner_lines
 
-csv_filename = "extrato.csv"
-
-csv_data = []
-
+# create filters 
 #  DD/MM/AAAA ou DD-MM-AAAA
 date_pattern = r'\d{2}/\d{2}/\d{4}'
 time_pattern = r'\d{2}:\d{2}'
@@ -46,6 +42,8 @@ transaction_pattern = r'\(\+\)|\(\-\)'
 
 description_line = False
 
+csv_data = []
+csv_filename = "extrato.csv"
 with open(csv_filename, mode='w', newline='') as csv_file:
     csv_writer = csv.writer(csv_file)
 
@@ -53,7 +51,7 @@ with open(csv_filename, mode='w', newline='') as csv_file:
     header = ["Data", "Valor", "Tipo de Transação", "Descrição", "Tipo de Serviço"]
     csv_writer.writerow(header)
 
-
+    # read the entire data text
     for line in range(0, len(lines)):
         if description_line:
             time_matches = ''.join(re.findall(time_pattern, lines[line])).strip()
@@ -84,6 +82,7 @@ with open(csv_filename, mode='w', newline='') as csv_file:
         # create a matrix of datas
         row = [date_matches, money_matches, transaction_type_matches, transaction_description]
 
+        # if transaction_description is some of these cases, the program will work differently in the next iteration, that's because the pdf data lines are poorly formulated
         if "Estorno de Débito" in transaction_description or "Saldo Anterior" in transaction_description:  
             row.append("- - -")
             csv_writer.writerow(row)
@@ -91,5 +90,4 @@ with open(csv_filename, mode='w', newline='') as csv_file:
         else: 
             description_line = True
 
-for row in csv_data:
-    print(row)
+print("[+] csv file created")
