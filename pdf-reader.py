@@ -10,7 +10,6 @@ print(" * enter the name you want for your worksheet:")
 f_destination = input()
 f_destination += ".csv"
 
-
 text = ""
 parts = []
 
@@ -57,7 +56,7 @@ with open(f_destination, mode='w', newline='') as csv_file:
     csv_writer = csv.writer(csv_file)
 
     # csv header
-    header = ["Data", "Valor", "Tipo de Transação", "Descrição", "Tipo de Serviço"]
+    header = ["Data", "Valor", "Descrição", "Tipo de Serviço"]
     csv_writer.writerow(header)
 
     # read and format the entire data text
@@ -80,9 +79,12 @@ with open(f_destination, mode='w', newline='') as csv_file:
         if (date_matches == ''):
             continue
 
-        money_matches = ''.join(re.findall(money_pattern, line)).strip()
-
         transaction_type_matches = ''.join(re.findall(transaction_pattern, line)).strip()
+        transaction_type = transaction_type_matches.replace('(', '').replace(')', '').strip()
+
+        money_matches = ''.join(re.findall(money_pattern, line)).strip()
+        
+        money_transaction = transaction_type + money_matches
 
         # find the date position
         date_start = line.find(date_matches)
@@ -90,7 +92,7 @@ with open(f_destination, mode='w', newline='') as csv_file:
         transaction_description = line[date_start + len(date_matches):].strip()
 
         # create a matrix of datas
-        row = [date_matches, money_matches, transaction_type_matches, transaction_description]
+        row = [date_matches, money_transaction, transaction_description]
 
         # if transaction_description is some of these cases, 
         # the program will work differently in the next iteration,
