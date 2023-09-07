@@ -3,16 +3,29 @@ from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
 # setting the apis configs
-myscope = ['https://spreadsheets.google.com/feeds',
-           'https://www.googleapis.com/auth/drive']
-mycreds = ServiceAccountCredentials.from_json_keyfile_name('finance2gsheet-086d22416d93.json', myscope)
-myclient = gspread.authorize(mycreds)
+try:
+    myscope = ['https://spreadsheets.google.com/feeds',
+               'https://www.googleapis.com/auth/drive']
+    mycreds = ServiceAccountCredentials.from_json_keyfile_name('finance2gsheet-086d22416d93.json', myscope)
+    myclient = gspread.authorize(mycreds)
+    print("[+] credentials api OK")
+except Exception as exc:
+    print(f"[-] Error {exc}")
+    exit
 
 # open the spreadsheet
-worksheet = myclient.open("Finanças").sheet1
+print(" * Write your google spreadsheet's name: ")
+spreadsheetname = input()
+worksheet = myclient.open(spreadsheetname).sheet1
+if worksheet == '':
+    print("[-] error oppening the spreadsheet")
+    exit
+print("[+] spreasheet opened")
 
 # open csv file
-df = pd.read_csv("extrato.csv")
+print(" * Write your csv file name: ")
+csvname = input()
+df = pd.read_csv(csvname + ".csv")
 
 # df.columns.values.toollist() take the name of columns
 # df.values.tolist() take the values of all rows
@@ -54,19 +67,26 @@ body_format = {
     }
 }
 
+# put all datas in the worksheet
 worksheet.update([df.columns.values.tolist()] + df.values.tolist(), value_input_option='USER_ENTERED')
+print("[+] data sended to spreadsheet")
 
 # get number of columns
 n_columns = df.columns.size
-print(f'number of columns is {n_columns}')
+print(f' * number of columns is {n_columns}')
+# geet number of rows
 n_rows = df.shape[0]
-print(f'number of row is {n_rows}')
+print(f' * number of row is {n_rows}')
 
-# set the header formatting in sheet
+# set the header format
 worksheet.format('A1:{}'.format(chr(65 + n_columns - 1) + '1'), header_format)
+print("[+] header formatted")
 
-# Define o intervalo das células de dados (excluindo o cabeçalho)
+# data range (excluding header row)
 data_range = 'A2:{}{}'.format(chr(65 + n_columns - 1), n_rows + 1)
 
-# Aplica o formato às células de dados
+# set the body format
 worksheet.format(data_range, body_format)
+print("[+] body formatted")
+
+print("[+] spreadsheet available in google drive")
