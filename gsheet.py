@@ -2,6 +2,9 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
+def numberToLetter(value):
+    return chr(65 + value - 1)
+
 # setting the apis configs
 try:
     myscope = ['https://spreadsheets.google.com/feeds',
@@ -74,19 +77,35 @@ print("[+] data sended to spreadsheet")
 # get number of columns
 n_columns = df.columns.size
 print(f' * number of columns is {n_columns}')
-# geet number of rows
+# get number of rows
 n_rows = df.shape[0]
 print(f' * number of row is {n_rows}')
 
 # set the header format
-worksheet.format('A1:{}'.format(chr(65 + n_columns - 1) + '1'), header_format)
+worksheet.format('A1:{}'.format(
+    numberToLetter(n_columns) + '1'), header_format)
 print("[+] header formatted")
 
 # data range (excluding header row)
-data_range = 'A2:{}{}'.format(chr(65 + n_columns - 1), n_rows + 1)
+data_range = 'A2:{}{}'.format(
+    numberToLetter(n_columns), n_rows + 1)
 
 # set the body format
 worksheet.format(data_range, body_format)
+
+# data range (excluding header row)
+money_range = 'B2:B{}'.format(n_rows + 1)
+
+# Defina o formato numérico para o modo dinheiro
+money_format = {
+    "type": "CURRENCY",
+    # "pattern": "R$#,##0.00"
+}
+
+# set the body format
+worksheet.format(money_range, body_format)
+
+
 print("[+] body formatted")
 
 print("[+] spreadsheet available in google drive")
