@@ -55,6 +55,10 @@ with open(f_destination, mode='w', newline='') as csv_file:
 
     # read and format the entire data text
     for line in lines:
+        # this line doesnt matter to me
+        if "Saldo Anterior" in line:
+            continue
+
         if description_line:
             time_matches = ''.join(re.findall(time_pattern, line)).strip()
 
