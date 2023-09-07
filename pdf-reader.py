@@ -2,6 +2,15 @@ from PyPDF2 import PdfReader
 import csv
 import re
 
+print(" * enter the name of your bank statement file:")
+f_origin = input()
+f_origin += ".pdf"
+
+print(" * enter the name you want for your worksheet:")
+f_destination = input()
+f_destination += ".csv"
+
+
 text = ""
 parts = []
 
@@ -13,11 +22,11 @@ def visitor_body(text, cm, tm, font_dict, font_size):
 
 # simply read the pdf
 try:
-    reader = PdfReader("extrato.pdf")
+    reader = PdfReader(f_origin)
     for page in reader.pages:
         text += page.extract_text(visitor_text = visitor_body)
         text_body = "".join(parts)
-    print("[+] pdf read with success!\n")
+    print("[+] pdf read with success!")
 except Exception as exc:
     print(f"[-] Error: {exc}")
 
@@ -43,8 +52,7 @@ transaction_pattern = r'\(\+\)|\(\-\)'
 description_line = False
 
 csv_data = []
-csv_filename = "extrato.csv"
-with open(csv_filename, mode='w', newline='') as csv_file:
+with open(f_destination, mode='w', newline='') as csv_file:
     csv_writer = csv.writer(csv_file)
 
     # csv header
