@@ -50,6 +50,7 @@ money_pattern = r'\d{1},\d{2}|\d{2},\d{2}|\d{3},\d{2}|\d{1}.\d{3},\d{2}'
 transaction_pattern = r'\(\+\)|\(\-\)'
 
 description_line = False
+exception_cases = ['Estorno de Débito', 'Saldo Anterior']
 
 csv_data = []
 with open(f_destination, mode='w', newline='') as csv_file:
@@ -59,39 +60,42 @@ with open(f_destination, mode='w', newline='') as csv_file:
     header = ["Data", "Valor", "Tipo de Transação", "Descrição", "Tipo de Serviço"]
     csv_writer.writerow(header)
 
-    # read the entire data text
-    for line in range(0, len(lines)):
+    # read and format the entire data text
+    for line in lines:
         if description_line:
-            time_matches = ''.join(re.findall(time_pattern, lines[line])).strip()
+            time_matches = ''.join(re.findall(time_pattern, line)).strip()
 
             # find the time position
-            time_start = lines[line].find(time_matches)
+            time_start = line.find(time_matches)
             # take text after time
-            service_type = lines[line][time_start + len(time_matches):].strip()
+            service_type = line[time_start + len(time_matches):].strip()
 
             row.append(service_type)
             csv_writer.writerow(row)
 
             description_line = False
+            continue
 
-        date_matches = ''.join(re.findall(date_pattern, lines[line])).strip()
+        date_matches = ''.join(re.findall(date_pattern, line)).strip()
         if (date_matches == ''):
             continue
 
-        money_matches = ''.join(re.findall(money_pattern, lines[line])).strip()
+        money_matches = ''.join(re.findall(money_pattern, line)).strip()
 
-        transaction_type_matches = ''.join(re.findall(transaction_pattern, lines[line])).strip()
+        transaction_type_matches = ''.join(re.findall(transaction_pattern, line)).strip()
 
         # find the date position
-        date_start = lines[line].find(date_matches)
+        date_start = line.find(date_matches)
         # take text after date
-        transaction_description = lines[line][date_start + len(date_matches):].strip()
+        transaction_description = line[date_start + len(date_matches):].strip()
 
         # create a matrix of datas
         row = [date_matches, money_matches, transaction_type_matches, transaction_description]
 
-        # if transaction_description is some of these cases, the program will work differently in the next iteration, that's because the pdf data lines are poorly formulated
-        if "Estorno de Débito" in transaction_description or "Saldo Anterior" in transaction_description:  
+        # if transaction_description is some of these cases, 
+        # the program will work differently in the next iteration,
+        # that's because the pdf data lines are poorly formulated
+        if transaction_description in exception_cases:  
             row.append("- - -")
             csv_writer.writerow(row)
             continue
