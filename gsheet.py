@@ -19,19 +19,38 @@ df = pd.read_csv("extrato.csv")
 
 # header format
 header_format = {
+    "backgroundColor": {
+        "red": 49.0 / 255.0,
+        "green": 119.0 / 255.0,
+        "blue": 115.0 / 255.0
+    },
+    "horizontalAlignment": "CENTER",
     "textFormat": {
+        "foregroundColor": {
+            "red": 1.0,
+            "green": 1.0,
+            "blue": 1.0
+        },
+        "fontSize": 14,
         "bold": True
     }
 }
 
 body_format = {
+    "backgroundColor":{
+        "red": 176.0 / 255.0,
+        "green": 164.0 / 255.0,
+        "blue": 217.0 / 255.0,
+    },
+    "horizontalAlignment": "CENTER",
     "textFormat": {
         "bold": False,
         "foregroundColor": {
             "red": 0.0,
             "green": 0.0,
-            "blue": 1.0
-        }
+            "blue": 0.0
+        },
+        "fontSize": 12
     }
 }
 
@@ -46,20 +65,8 @@ print(f'number of row is {n_rows}')
 # set the header formatting in sheet
 worksheet.format('A1:{}'.format(chr(65 + n_columns - 1) + '1'), header_format)
 
-    # Define o intervalo das células de dados (excluindo o cabeçalho)
+# Define o intervalo das células de dados (excluindo o cabeçalho)
 data_range = 'A2:{}{}'.format(chr(65 + n_columns - 1), n_rows + 1)
 
-# Formato para as células de dados (exceto o cabeçalho)
-data_format = {
-    "textFormat": {
-        "bold": False,
-        "foregroundColor": {
-            "red": 1.0,
-            "green": 0.0,
-            "blue": 0.0
-        }
-    }
-}
-
 # Aplica o formato às células de dados
-worksheet.format(data_range, data_format)
+worksheet.format(data_range, body_format)
