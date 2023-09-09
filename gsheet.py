@@ -70,7 +70,6 @@ except Exception as exc:
     print("[-] This worksheet doesn't exist. We'll create a new worksheet")
     worksheet = spreadsheet.add_worksheet(title=month_name, rows="100", cols="10")
 
-
 # header format
 header_format = {
     "backgroundColor": {
@@ -129,20 +128,23 @@ data_range = 'A2:{}{}'.format(
     numberToLetter(n_columns), n_rows + 1)
 
 # set the body format
+print(data_range)
 worksheet.format(data_range, body_format)
 
 # data range (excluding header row)
 money_range = 'B2:B{}'.format(n_rows + 1)
+print(money_range)
 
-# Defina o formato numérico para o modo dinheiro
+# format to money
 money_format = {
-    "type": "CURRENCY",
-    # "pattern": "R$#,##0.00"
+    "numberFormat": {
+        "type": "CURRENCY",
+        "pattern": "\"R$\"#,##0.00"
+    }
 }
 
-# set the body format
-worksheet.format(money_range, body_format)
-
+# set the value format
+worksheet.format(money_range, money_format)
 
 print("[+] body formatted")
 
