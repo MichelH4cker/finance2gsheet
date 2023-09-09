@@ -16,10 +16,12 @@ pip install PyPDF2 gspread google-auth-oauthlib==0.4.6
 ```
 
 ## Usage 
-To use the program is very simples, first you will need open your terminal run the program:
+The most complicated part of using it is creating a folder and a spreadsheet in Google Drive and authorizing its use as an API. I recommend watching the video https://youtu.be/82DGz7IxW7c, which was the step by step I followed.
+
+After the google configurations it's very simple yo use the program is very simples. In your terminal you will need to run the bash script and follow the instructions:
 
 ```bash
-python3 pdf-reader.py
+./finance2gsheet.sh
 ```
 
 ## Specifications and limitations
