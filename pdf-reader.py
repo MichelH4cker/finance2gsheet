@@ -13,7 +13,6 @@ f_destination += ".csv"
 text = ""
 parts = []
 
-
 # simply read the pdf
 try:
     reader = PdfReader(f_origin)
