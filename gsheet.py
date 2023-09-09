@@ -2,6 +2,22 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 
+# month dictionary
+months = {
+    "01" : "Janeiro",
+    "02" : "Fevereiro",
+    "03" : "Março",
+    "04" : "Abril",
+    "05" : "Maio",
+    "06" : "Junho",
+    "07" : "Julho",
+    "08" : "Agosto",
+    "09" : "Setembro",
+    "10": "Outubro",
+    "11": "Novembro",
+    "12": "Dezembro"
+}
+
 def numberToLetter(value):
     return chr(65 + value - 1)
 
@@ -19,19 +35,37 @@ except Exception as exc:
 # open the spreadsheet
 print(" * Write your google spreadsheet's name: ")
 spreadsheetname = input()
-worksheet = myclient.open(spreadsheetname).sheet1
-if worksheet == '':
+spreadsheet = myclient.open(spreadsheetname)
+if spreadsheet == '':
     print("[-] error oppening the spreadsheet")
     exit
 print("[+] spreasheet opened")
 
 # open csv file
-print(" * Write your csv file name: ")
-csvname = input()
-df = pd.read_csv(csvname + ".csv")
+df = pd.read_csv("extrato.csv")
 
-# df.columns.values.toollist() take the name of columns
-# df.values.tolist() take the values of all rows
+# get the column "Data"
+date_column = df['Data']
+
+# get the first item
+value = date_column.iloc[0]
+
+# divide string by '/'
+parts = value.split('/')
+
+# the second parth is the month
+csv_month = parts[1]
+print(csv_month)
+
+month_name = months.get(csv_month)
+print(f" * the worksheet that will be updated is {month_name}")
+
+# open or create new worksheet
+try:
+    worksheet = spreadsheet.worksheet(month_name)
+except Exception as exc:
+    print("[-] This worksheet doesn't exist. We'll create a new worksheet")
+    worksheet = spreadsheet.add_worksheet(title=month_name, rows="100", cols="10")
 
 # header format
 header_format = {
@@ -52,6 +86,7 @@ header_format = {
     }
 }
 
+# body format
 body_format = {
     "backgroundColor":{
         "red": 176.0 / 255.0,
@@ -91,20 +126,23 @@ data_range = 'A2:{}{}'.format(
     numberToLetter(n_columns), n_rows + 1)
 
 # set the body format
+print(data_range)
 worksheet.format(data_range, body_format)
 
 # data range (excluding header row)
 money_range = 'B2:B{}'.format(n_rows + 1)
+print(money_range)
 
-# Defina o formato numérico para o modo dinheiro
+# format to money
 money_format = {
-    "type": "CURRENCY",
-    # "pattern": "R$#,##0.00"
+    "numberFormat": {
+        "type": "CURRENCY",
+        "pattern": "\"R$\"#,##0.00"
+    }
 }
 
-# set the body format
-worksheet.format(money_range, body_format)
-
+# set the value format
+worksheet.format(money_range, money_format)
 
 print("[+] body formatted")
 
