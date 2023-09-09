@@ -18,10 +18,16 @@ pip install PyPDF2 gspread google-auth-oauthlib==0.4.6
 ## Usage 
 The most complicated part of using it is creating a folder and a spreadsheet in Google Drive and authorizing its use as an API. I recommend watching the video https://youtu.be/82DGz7IxW7c, which was the step by step I followed.
 
-After the google configurations it's very simple yo use the program is very simples. In your terminal you will need to run the bash script and follow the instructions:
+After the google configurations it's very simple yo use the program is very simples. In your terminal you will need to run the bash script and follow the instructions.
 
 ```bash
 ./finance2gsheet.sh
+```
+
+O script do bash executa dois programas de uma vez só: o programa que converte um extrato em pdf para o arquivo csv e o programa que coloca o csv na planilha google. Se o seu banco já fornece o arquivo csv, tudo que você precisa fazer é rodar o comando e, novamente, seguir as instruções
+
+```bash
+python3 gsheet.py
 ```
 
 ## Specifications and limitations
