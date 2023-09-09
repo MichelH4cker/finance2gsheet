@@ -18,7 +18,6 @@ months = {
     "12": "Dezembro"
 }
 
-
 def numberToLetter(value):
     return chr(65 + value - 1)
 
@@ -43,9 +42,7 @@ if spreadsheet == '':
 print("[+] spreasheet opened")
 
 # open csv file
-print(" * Write your csv file name: ")
-csvname = input()
-df = pd.read_csv(csvname + ".csv")
+df = pd.read_csv("extrato.csv")
 
 # get the column "Data"
 date_column = df['Data']
@@ -89,6 +86,7 @@ header_format = {
     }
 }
 
+# body format
 body_format = {
     "backgroundColor":{
         "red": 176.0 / 255.0,

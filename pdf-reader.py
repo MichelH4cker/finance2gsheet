@@ -6,9 +6,8 @@ print(" * enter the name of your bank statement file:")
 f_origin = input()
 f_origin += ".pdf"
 
-print(" * enter the name you want for your worksheet:")
-f_destination = input()
-f_destination += ".csv"
+f_destination = "extrato.csv"
+print("[+] A csv file 'extrato.csv' was created")
 
 text = ""
 parts = []
